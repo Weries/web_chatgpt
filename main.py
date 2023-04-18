@@ -14,6 +14,7 @@ messages = []
 @app.route('/')
 
 # git push测试1
+# 进一步的测试
 def home():
     return render_template('index.html')
 
