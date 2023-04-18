@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>ChatGPT</title>
+		<style>
+			.image-section {
+			  position: relative;
+			  display: flex;
+			  align-items: center;
+			}
+	  
+			img {
+			  max-width: 20%;
+			  height: auto;
+			  margin-right: 20px;
+			}
+	  
+			p {
+			  font-size: 12px;
+			  margin: 0;
+			}
+		  </style>
+		<link
+			rel="stylesheet"
+			href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css"
+		/>
+		<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"></script>
+		<script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
+		<link
+			rel="stylesheet"
+			href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/default.min.css"
+		/>
+		<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script>
+		<script>
+			hljs.initHighlightingOnLoad();
+			hljs.highlightAll();
+		</script>
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<a class="navbar-brand mx-auto" href="#">ChatGPT</a>
+		</nav>
+		<div class="container mt-3">
+			<div class="row">
+        <div class="col-md-6 offset-md-3 col-12">
+          <ul class="list-group" id="chat-window">
+          </ul>
+          <form id="message-form">
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" id="message-input" placeholder="输入消息...">
+              <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">发送</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+		</div>
+		<script>
+			var chatWindow = $("#chat-window");
+			var messageInput = $("#message-input");
+
+			$("#message-form").on("submit", function (event) {
+				event.preventDefault();
+				var message = messageInput.val();
+				if (message) {
+					chatWindow.append(
+						"<li class='list-group-item'><b>我:</b> " + message + "</li>"
+					);
+					messageInput.val("");
+					$.ajax({
+						url: "/get_response",
+						type: "POST",
+						data: { message: message },
+						beforeSend: function () {
+							// 在这里显示加载指示器
+							chatWindow.append(
+								"<li class='list-group-item '>正在加载，请稍后...</li>"
+							);
+						},
+						success: function (response) {
+							chatWindow.find("li:last-child").remove();
+							var md = new markdownit({
+								highlight: function (str, lang) {
+									if (lang && hljs.getLanguage(lang)) {
+										try {
+											return hljs.highlight(lang, str).value;
+										} catch (__) {}
+									}
+
+									return ""; // 使用额外的默认转义
+								},
+							});
+							var html = md.render(response);
+							chatWindow.append(
+								"<li class='list-group-item'><b>ChatGPT:</b> " + html + "</li>"
+							);
+						},
+						error: function () {
+							chatWindow.append(
+								"<li class='list-group-item text-danger'>发送消息失败</li>"
+							);
+						},
+					});
+				}
+			});
+		</script>
+	</body>
+</html>

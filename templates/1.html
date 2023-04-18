@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>图片和文本示例</title>
+    <style>
+        .container {
+        position: relative; /* 父级容器设为相对定位 */
+        width: 400px;
+        height: 250px;
+        border: 1px solid #ccc;
+        margin: 0 auto;
+        }
+
+        img {
+        position: absolute; /* 图片设为绝对定位 */
+        left: 20px;
+        top: 20px;
+        }
+
+        h2 {
+        position: absolute; /* 标题设为绝对定位 */
+        right: 20px;
+        top: 20px;
+        }
+
+        p {
+        position: absolute; /* 文本设为绝对定位 */
+        left: 20px;
+        bottom: 20px;
+        }
+    </style>
+    </head>
+    <body>
+    <div class="container">
+        <img src="1.png" alt="图片" />
+        <h2>标题</h2>
+        <p>欢迎光临</p>
+    </div>
+  </body>
+</html>
