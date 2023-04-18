@@ -5,6 +5,7 @@ from email.mime.text import MIMEText
 from datetime import datetime
 import pandas as pd
 
+
 def get_token(date):
     df = pd.read_csv('./logs/' + date + '.txt', delimiter='\t')
     df['question_token_count'] = df['question'].apply(lambda x:len(x))
