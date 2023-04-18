@@ -6,6 +6,8 @@ from datetime import datetime
 import pandas as pd
 
 
+
+# 哈哈哈
 def get_token(date):
     df = pd.read_csv('./logs/' + date + '.txt', delimiter='\t')
     df['question_token_count'] = df['question'].apply(lambda x:len(x))
